@@ -1,0 +1,12 @@
+if [[ $TERM == "screen" ]]; then
+  # Make sure we do not do weird stuff here
+else
+  # I use Pal to remind me of stuff (http://palcal.sourceforge.net)
+  /usr/bin/pal --color
+
+  # Export some variables
+  export PALUDIS_OPTIONS="--log-level warning --show-reasons full --show-use-descriptions changed --resume-command-template /tmp/paludis-resume-XXXXXX --dl-reinstall-scm daily --with-unused-dependencies --dl-reinstall if-use-changed --dl-fall-back as-needed"
+fi
+
+# Turn off flow control handling completely
+/bin/stty -ixon -ixoff

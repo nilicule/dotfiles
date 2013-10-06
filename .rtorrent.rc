@@ -1,0 +1,103 @@
+# This is an example resource file for rTorrent. Copy to
+# ~/.rtorrent.rc and enable/modify the options as needed. Remember to
+# uncomment the options you wish to enable.
+
+# Minumum amount of peers to connect per torrent, if available.
+#min_peers = 40
+
+# Minumum amount of peers to connect per torrent.
+#max_peers = 100
+
+# Maximum number of simultanious uploads per torrent.
+#max_uploads = 15
+
+# Global download rate in KiB. "0" for unlimited.
+#download_rate = 0
+
+# Global upload rate in KiB. "0" for unlimited.
+upload_rate = 2000
+
+# Default directory to save downloaded files. Note it doesn't support
+# space yet.
+directory = /var/torrent/incoming/USERNAME/
+
+# Default session directory. Make sure you don't run multiple instance
+# of rtorrent using the same session directory. Perhaps using a
+# relative path?
+#session = 
+
+# The ip address reported to the tracker.
+#ip = 127.0.0.1
+
+# The ip address the listening socket and outgoing connections is
+# bound to.
+#bind = 127.0.0.1
+
+# Port range to use for listening.
+port_range = 30000-30009
+
+# Start opening ports at a random position within the port range.
+port_random = no
+
+# Check hash for finished torrents. Might be usefull until the bug is
+# fixed that causes lack of diskspace not to be properly reported.
+#check_hash = no
+
+# Set whetever the client should try to connect to UDP trackers.
+use_udp_trackers = yes
+
+#
+# Do not modify the following parameters unless you know what you're doing.
+#
+
+# Hash read-ahead controls how many MB to request the kernel to read
+# ahead. If the value is too low the disk may not be fully utilized,
+# while if too high the kernel might not be able to keep the read
+# pages in memory thus end up trashing.
+#hash_read_ahead = 10
+
+# Interval between attempts to check the hash, in milliseconds.
+#hash_interval = 100
+
+# Number of attempts to check the hash while using the mincore status,
+# before forcing. Overworked systems might need lower values to get a
+# decent hash checking rate.
+#hash_max_tries = 10
+
+# Max number of files to keep open simultaniously.
+#max_open_files = 128
+
+# Number of sockets to simultaneously keep open.
+#max_open_sockets = <no default>
+
+# Dump data received from trackers to the files
+# "./tracker_dump.<time>".
+#tracker_dump = no
+
+# Change the interval between each throttle tick, in milliseconds. In
+# the range 1-5000 ms.
+#throttle_interval = 1000
+
+# Watch a certain directory for torrents
+schedule = watch_directory,5,5,load_start=/home/USERNAME/Torrents/*.torrent
+schedule = untied_directory,5,5,stop_untied=
+
+# Try to do some memory limiting
+#max_memory_usage = 104900000
+
+# Close torrents when diskspace is low.
+schedule = low_diskspace,5,60,close_low_diskspace=1024M
+
+#ratio usage with rtorrent above 0.8.4
+# Enable the default ratio group.
+ratio.enable=
+# Change the limits, the defaults should be sufficient.
+ratio.min.set=300
+ratio.max.set=2000
+ratio.upload.set=200M
+# Changing the command triggered when the ratio is reached.
+system.method.set = group.seeding.ratio.command, d.close=, d.erase=
+
+
+# Save session data
+schedule = session_save,240,300,session_save=

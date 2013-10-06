@@ -1,0 +1,141 @@
+#compdef curl
+
+# @(#) $Id$
+
+local curcontext="$curcontext" state line
+typeset -A opt_args
+
+# TODO:
+# -b needs to complete foo=bar as well.
+# --ciphers needs to complete a syntax set at
+#   <http://www.openssl.org/docs/apps/ciphers.html>.
+# --connect-timeout needs to complete an integer?
+# -C needs integer or "-".
+# -data* needs to complete foo=bar and @file and @-.
+# -e needs to specify ;auto?
+# -F needs form param magic.
+# Allow -G only after --data*
+# -Q completes list of known commands?
+# Allow -S only after -s
+# -t needs foo=bar from TTYPE=,XDISPLOC=,NEW_ENV=
+# -u should allow to pick from known users?
+# -z should allow date formats and "-" too.
+
+_curl_socks () {
+    # XXX Should probably use _combination here to allow setting via
+    # zstyle...
+    if compset -P '*:' ; then
+        _message -e port-numbers 'port number'
+    else
+        _wanted hosts expl host _hosts -S:
+    fi
+}
+
+_curl_host_or_interface () {
+    # XXX Also need to specify "-" for "default".
+    _alternative \
+        'hosts:host:_hosts' \
+        'interfaces:interface:_net_interfaces'
+}
+
+_arguments -C -s \
+    {-a,--append}'[append instead of overwrite target]' \
+    {-A,--user-agent}':UA string:' \
+    --anyauth'[figure out authentication method]' \
+    {-b,--cookie}':cookie file:_files' \
+    {-B,--use-ascii}'[use ASCII not binary for FTP]' \
+    --basic'[use basic auth]' \
+    --ciphers':OpenSSL cipher list:' \
+    --compressed'[request a compressed response]' \
+    --connect-timeout':max time in seconds for connect:' \
+    {-c,--cookie-jar}':file for cookie jar:_files' \
+    {-C,--continue-at}':file offset:' \
+    --create-dirs'[create directories as needed]' \
+    --crlf'[convert LF to CRLF in upload]' \
+    {-d,--data}':data to POST:' \
+    --data-ascii':data to POST, in ASCII:' \
+    --data-binary':data to POST, unmolested:' \
+    --digest'[enables digest auth]' \
+    --disable-eprt'[disable use of EPRT and LPRT in FTP]' \
+    --disable-epsv'[disable use of EPSV in FTP]' \
+    {-D,--dump-header}':file to dump headers to:_files' \
+    {-e,--referer}':referrer URL:' \
+    --egd-file':path to EGD socket:_files -g "*(=)"' \
+    {-E,--cert}':path to certificate:_files' \
+    --cert-type':format of certificate:_values "X509 encoding" PEM DER ENG' \
+    --cacert':path to CA certificate:_files' \
+    --capath':path to CA directory:_directories' \
+    {-f,--fail}'[fail silently on server errors]' \
+    --ftp-create-dirs'[create missing directories on server]' \
+    --ftp-pasv'[use PASV mode for FTP]' \
+    --ftp-ssl'[use SSL for FTP]' \
+    {-F,--form}':form content:' \
+    {-g,--globoff}'[switch off URL globbing]' \
+    {-G,--get}'[use GET instead of POST]' \
+    {-h,--help}'[show usage]' \
+    {-H,--header}':HTTP header:' \
+    {-i,--include}'[include HTTP headers in output]' \
+    --interface':network interface:_net_interfaces' \
+    {-I,--head}'[fetch the HTTP header only]' \
+    {-j,--junk-session-cookies}'[do not write out session cookies]' \
+    {-k,--insecure}'[do not verify CA on SSL connections]' \
+    --key':path to private key:_files' \
+    --key-type':format of private key:_values "X509 encoding" PEM DER ENG' \
+    --krb4':kerberos4 auth level:_values "level" clear safe confidential private' \
+    {-K,--config}':path to config file:_files' \
+    --limit-rate':bytes per second:' \
+    {-l,--list-only}'[name-only view of FTP directory]' \
+    {-L,--location}'[follow redirects]' \
+    --location-trusted'[follow redirects with auth]' \
+    --max-filesize':max file size to download:' \
+    {-m,--max-time}':max time in seconds for entire request:' \
+    -M'[display full manual]' \
+    {-n,--netrc}'[scan ~/.netrc]' \
+    --netrc-optional'[scan ~/.netrc without failing]' \
+    --negotiate'[enables GSS-Negotiate auth]' \
+    {-N,--no-buffer}'[disables the buffering of the output stream]' \
+    --ntlm'[enable NTLM auth]' \
+    {-o,--output}':output file:_files' \
+    {-O,--remote-name}'[output to same name as remote]' \
+    --pass':pass phrase for the private key:' \
+    --proxy-basic'[use basic auth for the proxy server]' \
+    --proxy-digest'[use digest auth for the proxy server]' \
+    --proxy-ntlm'[use ntlm auth for the proxy server]' \
+    {-p,--proxytunnel}'[tunnel non HTTP requests through the proxy]' \
+    {-P,--ftp-port}':host to specify in PORT request to FTP server:_curl_host_or_interface' \
+    -q'[do not read ~/.curlrc]' \
+    {-Q,--quote}':arbitrary command for the FTP server:' \
+    --random-file':path to SSL seed file:_files' \
+    {-r,--range}':byte range to retrieve:' \
+    {-R,--remote-time}'[give local file same timestamp as remote]' \
+    {-s,--silent}'[no progress meter or error messages]' \
+    {-S,--show-error}'[show error messages]' \
+    --socks':SOCKS5 proxy:_curl_socks' \
+    --stderr':file for error output:_files' \
+    --tcp-nodelay'[turn on TCP_NODELAY]' \
+    {-t,--telnet-option}':telnet option:' \
+    {-T,--upload-file}':file to PUT:_files' \
+    --trace':trace file:_files' \
+    --trace-ascii':ASCII trace file:_files' \
+    {-u,--user}':username and password:' \
+    {-U,--proxy-user}':username and password for proxy auth:' \
+    --url':URL to fetch:_urls' \
+    {-v,--verbose}'[verbose mode]' \
+    {-V,--version}'[display version info]' \
+    {-w,--write-out}':output format:' \
+    {-x,--proxy}':proxy host and port:_hosts' \
+    {-X,--request}':HTTP method:_values "method" GET HEAD PUT POST DELETE' \
+    {-y,--speed-time}':abort if slow for seconds:' \
+    {-Y,--speed-limit}':abort if speed below:' \
+    {-z,--time-cond}':If-Modified-Since:_files' \
+    {-Z,--max-redirs}':max redirects:' \
+    {-0,--http1.0}'[use HTTP/1.0]' \
+    {-1,--tlsv1}'[use TLSv1 for SSL connections]' \
+    {-2,--sslv2}'[use SSLv2 for SSL connections]' \
+    {-3,--sslv3}'[use SSLv3 for SSL connections]' \
+    {-4,--ipv4}'[prefer IPv4 connection]' \
+    {-6,--ipv6}'[prefer IPv6 connection]' \
+    {-#,--progress-bar}'[display progress bar]' \
+    '*:URL:_urls'
+
+# vim: set et sw=4 syntax=zsh :

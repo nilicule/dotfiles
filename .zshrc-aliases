@@ -1,0 +1,85 @@
+#
+# ~/.zshrc-aliases
+# 
+# ChangeLog:
+#   20051105 - irssi will no longer launch a new screen session
+#              with irssi in it when run from within a running
+#              screen (blyant@gmail.com) 
+#   20051105 - Pal will now nicely start with colours
+#
+# Grab whatever you want -- I couldn't care less.
+#
+
+# Clean up unwanted system aliases and start from scratch.
+unhash -am '*'
+
+# Make sure we start pal in colour
+[ -x `which pal` ] && alias pal="pal --color"
+
+# Turn on colours for directory listings
+alias d="ls --color"
+alias ls="ls --color=auto"
+alias ll="ls --color -l"
+
+# Fast directory switching
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+
+# mmv
+alias mmv='noglob zmv -W'
+
+# No spelling correction
+alias man='nocorrect man'
+alias mysql='nocorrect mysql'
+alias mysqlshow='nocorrect mysqlshow'
+alias mv='nocorrect mv'
+alias cp='nocorrect cp'
+alias mkdir='nocorrect mkdir'
+
+alias clean='rm -f *~'
+
+# Switch to irssi if we already have it screened
+#alias irssi='if pgrep irssi;then screen -x irc;else if [ $TERM=="screen-bce" ];then irssi;fi;screen -S irc;irssi;fi'
+alias irssi='if pgrep irssi;then screen -x irc;else screen -S irc /usr/bin/irssi;fi'
+
+# Easy CVS
+alias cvsup='/usr/bin/cvs up -AdP'
+
+# highlight the current day in ``cal''
+alias ccal='var=$(cal); echo "${var/$(date +%-d)/$(echo -e "\033[1;31m$(date +%-d)\033[0m")}"'
+
+# See <http://strcat.neessen.net/hacks/rand-useragent.pl> ;-)
+if [ -x ~/bin/rand-useragent.pl ] && [ -x $(which w3m) ]; then
+    alias w3m='w3m -o user_agent="`rand-useragent.pl`" $1'
+fi
+
+# Rip from the FreshFM stream
+alias ripfresh='streamripper http://stream22.multikabel.net:80/ -s -u "WinampMPEG/5.33"'
+
+if (( EUID != 0 )); then
+  # some stuff for gentoo (i compelled to use it sometimes *narf*)
+  if [ -e "/etc/gentoo-release" ]; then
+    # We've switched to Paludis
+    alias emerge="echo Please use paludis instead"
+    alias paludis="sudo paludis"
+    alias eselect="sudo eselect"
+
+    # We don't need Portage's eupdatedb
+    #alias eupdatedb="sudo eupdatedb"
+
+    # Updating configfiles
+    alias etc-update="sudo /usr/sbin/etc-update"
+    alias env-update="sudo /usr/sbin/env-update"
+  fi
+  alias ifconfig="sudo ifconfig"
+  alias nmap="sudo nmap"
+  alias ftpwho="sudo pure-ftpwho"
+  alias pure-ftpwho="sudo pure-ftpwho"
+  alias pure-pw="sudo pure-pw"
+  alias nethogs="sudo nethogs"
+  alias iftop="sudo iftop"
+fi
+
